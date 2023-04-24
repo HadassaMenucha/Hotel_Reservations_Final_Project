@@ -38,6 +38,7 @@ def add_direct_booking(data_file):
     return data_file
 
 def drop_nan_columns(data_file):
+    pass
     # ::TODO drop nan columns
     # data_file=data_file.loc[:,data_file.isna().mean()<.7]
     # print(data_file.isna().mean())

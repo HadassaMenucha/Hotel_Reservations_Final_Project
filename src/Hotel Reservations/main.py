@@ -12,9 +12,9 @@ def main():
     ''' reading the data from file '''
     data_file = pd.read_csv('hotel_bookings.csv')
     # print(data_file)
-    # data_file=cleaning.replace_nulls(data_file)
-    # data_file=cleaning.fix_reservation_date(data_file)
-    # data_file=cleaning.fix_is_canceled(data_file)
+    data_file=cleaning.replace_nulls(data_file)
+    data_file=cleaning.fix_reservation_date(data_file)
+    data_file=cleaning.fix_is_canceled(data_file)
     print('b4 connection')
     database_actions.create_tables_from_df(data_file)
     print('after connection')

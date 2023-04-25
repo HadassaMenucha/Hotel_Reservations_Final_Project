@@ -16,14 +16,12 @@ def fix_is_canceled(data_file):
     data_file['is_canceled']=data_file['is_canceled'].map({1: True, 0: False})
     return data_file
 def fix_arrival_date(data_file):
-    # ::TODO convert arrival date from Series to int
-    print(datetime.datetime.fromisocalendar(2003, 10, 5))
-    data_file['arrival_date_month']=pd.to_datetime(data_file['arrival_date_month'], format='%B').dt.month
-    # print('year',data_file['arrival_date_year'].to_string(),'month', data_file['arrival_date_month'].to_string() ,'day',data_file['arrival_date_day_of_month'].to_string())
-    # create_date=lambda year,month,day:datetime.datetime(year,month,day)
-    # full_date=lambda year, month=data_file['arrival_date_month'], day=data_file['arrival_date_day_of_month']:datetime.datetime.fromisocalendar(year, month, day)
-    # data_file['arrival_date']=full_date(data_file['arrival_date_year'])
-    # print(data_file['arrival_date'].head(1))
+    ''' replacing the columns of year, month, day with a column date '''
+    data_file['arrival_date_month'] = pd.to_datetime(data_file['arrival_date_month'], format='%B').dt.month
+    data_file['arrival_date']=pd.to_datetime(data_file[['arrival_date_year', 'arrival_date_month', 'arrival_date_day_of_month']].rename(columns={'arrival_date_year': 'year', 'arrival_date_month': 'month', 'arrival_date_day_of_month': 'day'}))
+    data_file=data_file.drop('arrival_date_month',axis=1)
+    data_file=data_file.drop('arrival_date_year',axis=1)
+    data_file=data_file.drop('arrival_date_day_of_month',axis=1)
     return data_file
 
 def add_direct_booking(data_file):

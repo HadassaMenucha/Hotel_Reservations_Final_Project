@@ -2,11 +2,10 @@ import pandas as pd
 import datetime
 import matplotlib.pyplot as plt
 import seaborn as sns
-import calendar
 
 def replace_nulls(data_file):
     ''' replacing the nulls with nan '''
-    data_file.replace(['none','undefined','-'],'NaN')
+    data_file=data_file.replace(['none','undefined','-'],'NaN')
     return data_file
 def fix_reservation_date(data_file):
     ''' changing reservation_date to datetime '''

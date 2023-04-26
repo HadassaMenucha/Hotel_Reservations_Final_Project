@@ -1,23 +1,32 @@
 import pandas as pd
 from data_analysis import cleaning
-from sql_dir import database_actions
+from sql_dir import database_actions , queries
+from pprint import pprint
 
 def main():
     ''' reading the data from file '''
     data_file = pd.read_csv('hotel_bookings.csv')
-    cleaning.drop_nan_columns(data_file)
+    data_file= cleaning.fix_is_canceled(data_file)
     # data_file=setup(data_file)
-    # cleaning.visualize(data_file)
-    # for x , y  in range (2), range(4):
-    #     print(a ,c )
-#         ValueError: too many values to unpack (expected 2)
-#     for a in range(2) and for c in range(4):
-#             print(a,c)
-#         NameError: name 'c' is not defined
-#     to_iter= dict([[x for x in  range(4)],[y for y in range(4)]])
-#     print(to_iter)
-#     for a ,b in list(range(4), range(4)):
-#         print(a)
+    choice = input('MENU: \n \t1.see the top 10 Reservations for an agent and country of your choice along with the Guest information'
+                   '\n \t 2.see all the Reservations + Guests for a year of your choice that are within a chosen range and were not canceled.'
+                   '\n \t 3.see which year had the most cancellations. How were the cancellations booked - through an agent, company, or directly?')
+    if choice == 1:
+        country = input('what country? ')
+        result = queries.get_top_agents_reservations_in_country(country)
+        pprint(result)
+
+    elif choice == 2:
+        year=input('enter year: ')
+        min = input('bottom of range: ')
+        max = input('top of range: ')
+        result = queries.reservations_year_range_adr(year,min,max)
+        pprint(result)
+    else:
+        result = queries.year_most_cancellations()
+        pprint(result)
+
+    cleaning.visualize(data_file)
 
 
 def setup(data_file):

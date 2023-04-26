@@ -1,5 +1,10 @@
 import database_actions
 from ..entities import Reservation
+import logging
+queryLogger=logging.getLogger('query')
+queryLogger.addHandler(logging.Handler('queries.log'))
+queryLogger.setLevel(logging.INFO)
+
 
 def get_top_agents_reservations_in_country(country):
     query='''select top 10 reservations.*  , guest.* 
@@ -12,8 +17,10 @@ def get_top_agents_reservations_in_country(country):
     join Reservation as reservations on data.agent = reservations.agent
     join Guest on Guest.GuestId= reservations.GuestId
     where num_reservations = max(num_reservations) and country=''' + "'" + country + "'"
+    queryLogger.info('get_top_agents_reservations_in_country: query: '+query)
     result = database_actions.query(query)
     reservations=list([Reservation(line) for line in result])
+    queryLogger.info('get_top_agents_reservations_in_country: result: ' + reservations)
     return reservations
 
 def reservations_year_range_adr(year, min , max):
@@ -22,8 +29,10 @@ def reservations_year_range_adr(year, min , max):
         from Reservation as r 
         join guest as g on g.GuestId=r.GuestId
         where year(r.arrival_date)= '''+year+" and r.adr between "+min +" and "+max+" and is_canceled =0 "
+    queryLogger.info('reservations_year_range_adr: query: '+query)
     result = database_actions.query(query)
     reservations=list([Reservation(line) for line in result])
+    queryLogger.info('reservations_year_range_adr: result: ' + reservations)
     return reservations
 
 def year_most_cancellations():
@@ -38,7 +47,9 @@ def year_most_cancellations():
         group by year(arrival_date)
         ) as data
     where numCancellations=max(numCancellations)'''
+    queryLogger.info('year_most_cancellations: query: ' + query)
     result = database_actions.query(query)
-    reservations = list([line for line in result])
-    return reservations
+    cancellations = list([line for line in result])
+    queryLogger.info('year_most_cancellations: result: ' + cancellations)
+    return cancellations
 

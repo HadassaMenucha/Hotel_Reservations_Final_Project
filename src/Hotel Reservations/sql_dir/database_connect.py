@@ -7,6 +7,10 @@ from . import  db_info
 # import db_info as db_info #this file has the dbinfo:server,db,etc.
 #This class is to connect to the database
 class DbCon:
+    connectionLog=logging.getLogger('connectionDB')
+    connectionLog.addHandler(logging.FileHandler('connectinDB.log'))
+    connectionLog.setLevel(logging.DEBUG)
+    
     def __init__(self):
             self.m_sServer = db_info.server
             self.m_sDriver = db_info.driver
@@ -14,18 +18,23 @@ class DbCon:
             self.m_sPort=db_info.port
             self.m_bConnected = False
     def Connect(self):
+        self.connectionLog.debug('begining connection')
         self.create_engine()
+        self.connectionLog.debug('created engine')
         #engine = sqlalchemy.create_engine('mssql+pyodbc://{}/{}?driver={}'.format(self.m_sServer, self.m_sDb, driver))
         self.m_oConn = self.m_engine.raw_connection()
         #self.m_oSession = Session(sessionmaker(bind=self.m_engine,autocommit=False))
         Session = sessionmaker(bind=self.m_engine,autocommit=False)
         self.m_oSession = Session()
         self.m_bConnected = True
+        self.connectionLog.debug('end connection')
 
     def create_engine(self):
+        self.connectionLog.debug('begin create engine')
         s = 'mssql+pyodbc://@' + self.m_sServer + '/' + self.m_sDb + '?trusted_connection=yes&driver='+self.m_sDriver
         self.m_engine = sqlalchemy.create_engine(s)
     def Disconnect(self):
+        self.connectionLog.debug('begin disconnect')
         if self.m_bConnected:
             self.m_oConn.cursor().close()
             self.m_oSession.close_all()
@@ -42,6 +51,8 @@ class DbCon:
         return df
     def insert_df(self, df_to_insert, s_table_name):
         #__init__() got multiple values for argument 'schema'
+        self.connectionLog.debug('insert_df')
         df_to_insert.to_sql(s_table_name, con=self.m_engine, if_exists='append', index=False, chunksize=1000) #,
         self.m_oConn.cursor().commit()
+        self.connectionLog.debug('insert committed')
    

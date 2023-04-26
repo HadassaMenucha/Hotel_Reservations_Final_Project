@@ -1,4 +1,4 @@
-from ..enums import customer_types
+from enums import customer_types
 class Guest:
     def __init__(self, data):
         self.guest_id=data['guestId']

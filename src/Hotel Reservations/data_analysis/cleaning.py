@@ -7,7 +7,7 @@ import logging
 debugLogger = logging.getLogger('values')
 debugLogger.setLevel(logging.DEBUG)
 file_log=logging.FileHandler('cleaning.log')
-debugLogger.hasHandler(file_log)
+debugLogger.addHandler(file_log)
 
 def replace_nulls(data_file):
     ''' replacing the nulls with nan '''

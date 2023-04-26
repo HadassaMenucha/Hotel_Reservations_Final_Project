@@ -6,8 +6,7 @@ from pprint import pprint
 def main():
     ''' reading the data from file '''
     data_file = pd.read_csv('hotel_bookings.csv')
-    data_file= cleaning.fix_is_canceled(data_file)
-    # data_file=setup(data_file)
+    data_file=setup(data_file)
     choice = input('MENU: \n \t1.see the top 10 Reservations for an agent and country of your choice along with the Guest information'
                    '\n \t 2.see all the Reservations + Guests for a year of your choice that are within a chosen range and were not canceled.'
                    '\n \t 3.see which year had the most cancellations. How were the cancellations booked - through an agent, company, or directly?')

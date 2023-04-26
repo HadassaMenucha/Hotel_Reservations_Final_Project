@@ -1,5 +1,5 @@
-from ..enums import deposit_type , meal_types, hotel_types
-import Guest
+from enums import deposit_type , meal_types, hotel_types
+from . import Guest
 class Reservation:
     def __init__(self,data):
         self.reservation_id=data['ReservationId']

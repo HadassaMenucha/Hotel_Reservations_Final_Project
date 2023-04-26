@@ -52,7 +52,7 @@ def year_most_cancellations():
         where is_canceled='True'
         group by year(arrival_date)
         ) as data
-    where numCancellations=max(numCancellations)'''
+    having numCancellations=max(numCancellations)'''
     queryLogger.info('year_most_cancellations: query: ' + query)
     result = database_actions.query(query)
     cancellations = list([line for line in result])

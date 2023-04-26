@@ -7,11 +7,8 @@ def create_tables_from_df(df_reservations):
     db.Connect()
     if not sqlalchemy.inspect(db.m_engine).has_table("Guest"):
         (df_guests,df_reservations) = split_df_reservations(df_reservations)
-        print(df_reservations)
         db.insert_df(df_reservations, "Reservation")
-        print('reser')
         db.insert_df(df_guests, "Guest")
-        print('guest')
 
         db.Disconnect()
     

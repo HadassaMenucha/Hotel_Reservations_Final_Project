@@ -43,6 +43,5 @@ class DbCon:
     def insert_df(self, df_to_insert, s_table_name):
         #__init__() got multiple values for argument 'schema'
         df_to_insert.to_sql(s_table_name, con=self.m_engine, if_exists='append', index=False, chunksize=1000) #,
-        print(df_to_insert)
         self.m_oConn.cursor().commit()
    

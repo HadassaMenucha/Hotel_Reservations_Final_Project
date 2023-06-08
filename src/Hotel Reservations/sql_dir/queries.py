@@ -2,7 +2,7 @@ from . import database_actions
 import sys
 sys.path.append('..entities/')
 # from entities import Reservation
-from entities import Reservation
+from entities.Reservation import Reservation
 import logging
 
 queryLogger = logging.getLogger('query')
@@ -11,6 +11,7 @@ my_handler=logging.FileHandler('query.log')
 queryLogger.addHandler(my_handler)
 
 def get_top_agents_reservations_in_country(country):
+    country = "'"+country+"'"
     query = ''' 
         select top 10 r.*, g.*
         from Reservation as r
@@ -21,30 +22,28 @@ def get_top_agents_reservations_in_country(country):
             from Reservation as r
             join Guest as g 
             on r.GuestId = g.GuestId
-            where country = ' '''+country +''' '
+            where country = '''+country +'''
             group by agent
             order by count(*) desc
             ) '''
     queryLogger.info('get_top_agents_reservations_in_country: query: ' + query)
     result = database_actions.query(query)
-    reservations = list([Reservation(line) for line in result])
-    queryLogger.info('get_top_agents_reservations_in_country: result: ' + reservations)
+    reservations = list([Reservation(line) for index,line in result.iterrows()])
+    # queryLogger.info('get_top_agents_reservations_in_country: result: ' + reservations)
     return reservations
 
 
 def reservations_year_range_adr(year, min, max):
     query = ''' 
-        select *
+        select top 10 *
         from Reservation as r 
         join guest as g on g.GuestId=r.GuestId
-        where year(r.arrival_date)= ''' + year + " and r.adr between " + min + " and " + max + " and is_canceled =0 "
+        where year(r.arrival_date)= ''' + year + " and r.adr between  " + min + " and " + max + " and is_canceled ='False' "
     queryLogger.info('reservations_year_range_adr: query: ' + query)
     result = database_actions.query(query)
-    reservations = result
-    # reservations = list([Reservation(line) for line in result])
-    queryLogger.info('reservations_year_range_adr: result: ' + reservations)
+    reservations = list([Reservation(line) for index,line in result.iterrows()])
+    # queryLogger.info('reservations_year_range_adr: result: ' + str(reservations))
     return reservations
-
 
 def year_most_cancellations():
     query = ''' 

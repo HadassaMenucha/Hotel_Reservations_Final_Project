@@ -3,6 +3,9 @@ import datetime
 import matplotlib.pyplot as plt
 import seaborn as sns
 import logging
+from matplotlib.ticker import MultipleLocator
+import matplotlib.ticker as plticker
+from pylab import *
 
 debugLogger = logging.getLogger('values')
 debugLogger.setLevel(logging.DEBUG)
@@ -72,8 +75,30 @@ def drop_nan_columns(data_file):
     return data_file
 def visualize(data_file):
     ''' visualizing the data '''
-    # ::TODO use mode or mean for visualization
+
     data_file.plot(kind='scatter' , x='adults', y='required_car_parking_spaces')
+    plt.xlabel('adults')
+    plt.ylabel('required car parking spaces')
+    plt.title('required_car_parking_spaces vs adults')
     plt.show()
-    sns.distplot(data_file['arrival_date'], hist=False)
+
+    sns.distplot(data_file['children'], hist=False)
+    plt.title('number of children')
+    plt.xlabel('amount of children')
+    plt.ylabel('amount of families')
+    plt.show()
+
+    print(data_file.columns)
+    plt.boxplot(data_file['stays_in_week_nights'])
+    plt.title('stays-in-weekend-nights')
+    plt.show()
+
+    data_to_group = data_file[['country','required_car_parking_spaces']]
+    grouped_adults = data_to_group.groupby('country').mean()
+    grouped_adults=grouped_adults.sort_values(by='required_car_parking_spaces')
+    plt.figure(figsize=(28,8))
+    sns.barplot(data=grouped_adults, x=grouped_adults.index, y='required_car_parking_spaces', width=5)
+
+    plt.title('average required_car_parking_spaces by country')
+    plt.xticks(rotation=90)
     plt.show()
